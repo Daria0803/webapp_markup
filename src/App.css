@@ -2,6 +2,22 @@
   text-align: center;
 }
 
+.text_red {
+  background: #F00;
+}
+
+.text_green {
+  background: #32CD32;
+}
+
+.text_blue {
+  background: #0000FF;
+}
+
+.text_yellow {
+  background: #FFFF00;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
