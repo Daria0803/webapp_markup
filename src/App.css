@@ -2,53 +2,86 @@
   text-align: center;
 }
 
+.wrapper {
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+}
+
+.flex-container {
+  background-color: #a5bbfd;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  min-height: 100vh;
+  font-size: calc(10px + 2vmin);
+}
+
+.markupColor {
+  opacity: 0.4;
+}
+
+input[type="text"] {
+  background-color: white;
+  border: 10;
+  border-radius: 6px;
+  border-bottom: solid 2px #113a65;
+  width: 60%;
+  padding-bottom: 4px;
+  color: #103a66;
+  font-weight: lighter;
+  margin-bottom: 30px;
+  margin-right: 20px;
+  font-size: 20px;
+  outline: none;
+}
+
+input::-moz-placeholder {
+  color: #103a65;
+}
+
+button {
+  appearance: none;
+  border: 0;
+  border-radius: 6px;
+  background: #4676D7;
+  color: #fff;
+  padding: 8px 16px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  background-color: white;
+}
+
+th, td {
+  padding: 10px 20px;
+  border: 1px solid #000;
+}
+
 .text_red {
-  background: #F00;
+  background-color: rgba(255, 0, 0, 0.3);
+  border-radius: 8px;
 }
 
 .text_green {
-  background: #32CD32;
+  background-color: rgba(0, 255, 0, 0.4);
+  border-radius: 8px;
 }
 
 .text_blue {
-  background: #0000FF;
+  background-color: rgba(0, 0, 255, 0.3);
+  border-radius: 8px;
 }
 
 .text_yellow {
-  background: #FFFF00;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  background-color: rgba(255, 255, 0, 0.3);
+  border-radius: 8px;
 }

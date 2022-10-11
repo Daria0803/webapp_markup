@@ -35,11 +35,21 @@ const prepareColor = (medEntityType) => {
   }
 }
 
+const checkOnlyOnce = (str, list) => {
+    var i;
+    for (i = 0; i < list.length; i++) {
+      if (list[i].text.toLowerCase() === str.toLowerCase()) {
+          return i;
+      }
+    }
+}
+
 class App extends Component {
 
   state = {
     found: false,
     text: "",
+    entities: [],
     error: undefined
   }
 
@@ -52,6 +62,7 @@ class App extends Component {
       const entities = Object.values(reviewExample.entities);
       var text = reviewExample.text;
       var totalArr = [];
+      console.log(entities)
 
       const total = entities.map((obj) => {
         const markupColor = prepareColor(obj.MedEntityType);
@@ -63,15 +74,14 @@ class App extends Component {
             text = dataArr[1];
           }
 
-          //console.log(text);
         });
       });
-      //console.log(totalArr.join(''));
       const result = totalArr.join('');
 
       this.setState({
         found: true,
         text: result,
+        entities: entities,
         error: undefined
       });
 
@@ -79,6 +89,7 @@ class App extends Component {
       this.setState({
         found: false,
         text: "",
+        entities: [],
         error: "Введите текст отзыва"
       });
     }
@@ -86,15 +97,55 @@ class App extends Component {
 
   render() {
     return(
-      <div>
-        <Form TransformText={this.gettingData}/>
-        <div>
+      <div className="wrapper">
+        <div className="flex-container">
+          <h1> Med-demo </h1>
+          <Form TransformText={this.gettingData}/>
+          <div>
+            { this.state.found &&
+              <div>
+                <div> <div dangerouslySetInnerHTML={{ __html: this.state.text }}/> </div>
+              </div>
+            }
+            <p> {this.state.error} </p>
+          </div>
           { this.state.found &&
-            <div>
-              <div> <div dangerouslySetInnerHTML={{ __html: this.state.text }}/> </div>
-            </div>
+            <table align="center">
+              <thead>
+                <tr>
+                  <th>Medication</th>
+                  <th>Disease</th>
+                  <th>ADR</th>
+                  <th>Note</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {this.state.entities.map((item, index1) => ((checkOnlyOnce(item.text, this.state.entities)===index1) && (item.Context.map((c) => (
+                  <tr key={index1+c}>
+                    <td>
+                    {item.MedEntityType === "Medication" &&
+                      <>
+                        {item.MedType === "Drugname" ? "Drugname: "+item.text : item.MedType === "SourceInfodrug" ? "SourceInfodrug: "+item.text : ""}
+                      </>
+                    }
+                    </td>
+                    <td>
+                      {item.MedEntityType === "Disease" &&
+                        <>
+                          {item.DisType === "Diseasename" ? "Diseasename: "+item.text : item.DisType === "Indication" ? "Indication: "+item.text : ""}
+                        </>
+                      }
+                    </td>
+                    <td> {item.MedEntityType === "ADR" ? item.text : ""} </td>
+                    <td> {item.MedEntityType === "Note" ? item.text : ""} </td>
+                  </tr>
+                ))))
+                )}
+
+              </tbody>
+            </table>
           }
-          <p> {this.state.error} </p>
         </div>
       </div>
     );
