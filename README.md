@@ -1,8 +1,9 @@
 ## Краткая инструкция для запуска:
 
 1. Установить [node.js](https://nodejs.org/en/download/).
+
    Проверка: 
-   ### `node -v`; ### `npm -v`
+   ### `node -v`;  `npm -v`
    
    Установка npx:
    
