@@ -48,8 +48,11 @@ class App extends Component {
 
   state = {
     found: false,
+    title: "",
     text: "",
+    url: "",
     entities: [],
+    tableData: {},
     error: undefined
   }
 
@@ -62,6 +65,9 @@ class App extends Component {
       const entities = Object.values(reviewExample.entities);
       var text = reviewExample.text;
       var totalArr = [];
+      var totalObj = {};
+      totalObj.Medication = {};
+      totalObj.Disease = {};
       console.log(entities)
 
       const total = entities.map((obj) => {
@@ -73,23 +79,84 @@ class App extends Component {
             totalArr.push(dataArr[0] + `<span class="text_${markupColor}">`+substr+'</span>');
             text = dataArr[1];
           }
-
         });
-      });
-      const result = totalArr.join('');
+        if (obj.MedEntityType === "Medication") {
+          if (totalObj.Medication[obj.MedType]) {
+            var contextArr = totalObj.Medication[obj.MedType];
+            obj.Context.map(context => {
+              if (contextArr[context] && !contextArr[context].includes(obj.text)) {
+                contextArr[context] += `, ${obj.text}`;
+              } else {
+                contextArr[context] = `${obj.text}`;
+              }
+            });
+          } else {
+            totalObj.Medication[obj.MedType] = [];
+            var contextArr = totalObj.Medication[obj.MedType];
+            obj.Context.map(context => {
+              contextArr[context] = `${obj.text}`;
+            });
+          }
+        }
+        if (obj.MedEntityType === "Disease") {
+          if (totalObj.Disease[obj.DisType]) {
+            var contextArr = totalObj.Disease[obj.DisType];
+            obj.Context.map(context => {
+              if (contextArr[context] && !contextArr[context].includes(obj.text)) {
+                contextArr[context] += `, ${obj.text}`;
+              } else {
+                contextArr[context] = `${obj.text}`;
+              }
+            });
+          } else {
+            totalObj.Disease[obj.DisType] = [];
+            var contextArr = totalObj.Disease[obj.DisType];
+            obj.Context.map(context => {
+              contextArr[context] = `${obj.text}`;
+            });
+          }
+        }
 
+        /*
+        obj.Context.map(context => {
+          if (obj.MedEntityType === "Medication") {
+            if (obj.MedType === "Drugname") {
+              totalObj.Drugname[context-1] = obj.text;
+            }
+          }
+        });
+        */
+
+      });
+      console.log(totalObj);
+      const result = totalArr.join('');
+      const resultSplit = result.split('\n', 5);
+      console.log(resultSplit);
+      console.log(resultSplit[4]);
+      //console.log(result2);
+      //Object.entries(this.state.tableData).map((key, value) => ( console.log(key)));
+      //console.log(typeof totalObj.Medication)
+      Object.entries(totalObj.Medication).map(([key, value]) => {
+        Object.entries(value).map(([k, v]) => console.log(`${key}: ${v}`))
+      })
       this.setState({
         found: true,
-        text: result,
+        title: resultSplit[2],
+        text: resultSplit[4],
+        url: resultSplit[0],
         entities: entities,
+        tableData: totalObj,
         error: undefined
       });
 
     } else {
       this.setState({
         found: false,
+        title: "",
         text: "",
+        url: "",
         entities: [],
+        tableData: {},
         error: "Введите текст отзыва"
       });
     }
@@ -104,49 +171,99 @@ class App extends Component {
           <div>
             { this.state.found &&
               <div>
-                <div> <div dangerouslySetInnerHTML={{ __html: this.state.text }}/> </div>
+
+                <div className="reviewtext">
+                  <p>
+                    <b dangerouslySetInnerHTML={{ __html: this.state.title }}/>
+                  </p>
+                  <div dangerouslySetInnerHTML={{ __html: this.state.text }}/>
+                  <p> <a href={this.state.url}> {this.state.url} </a> </p>
+                </div>
               </div>
             }
             <p> {this.state.error} </p>
           </div>
           { this.state.found &&
-            <table align="center">
-              <thead>
-                <tr>
-                  <th>Medication</th>
-                  <th>Disease</th>
-                  <th>ADR</th>
-                  <th>Note</th>
-                </tr>
-              </thead>
-              <tbody>
+            <div >
+              <table align="center">
+                <thead>
+                  <tr>
+                    <th>Medication</th>
+                    <th>Disease</th>
+                    <th>ADR</th>
+                    <th>Note</th>
+                  </tr>
+                </thead>
+                <tbody>
+                <>
+                {
+                  Object.entries(this.state.tableData.Medication).map(([key, value]) => (
+                    Object.entries(value).map(([k, v]) => (
+                        <tr>
+                          <td>{key}: {v}</td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                        </tr>
+                    ))
+                  ))
+                }
+                </>
+                <>
+                {
+                  Object.entries(this.state.tableData.Disease).map(([key, value]) => (
+                    Object.entries(value).map(([k, v]) => (
+                        <tr>
+                          <td></td>
+                          <td>{key}: {v}</td>
+                          <td></td>
+                          <td></td>
+                        </tr>
+                    ))
+                  ))
 
+                }
+                </>
+                <>
                 {this.state.entities.map((item, index1) => ((checkOnlyOnce(item.text, this.state.entities)===index1) && (item.Context.map((c) => (
+                  (item.MedEntityType === "ADR" || item.MedEntityType === "Note") && (
                   <tr key={index1+c}>
-                    <td>
-                    {item.MedEntityType === "Medication" &&
-                      <>
-                        {item.MedType === "Drugname" ? "Drugname: "+item.text : item.MedType === "SourceInfodrug" ? "SourceInfodrug: "+item.text : ""}
-                      </>
-                    }
-                    </td>
-                    <td>
-                      {item.MedEntityType === "Disease" &&
-                        <>
-                          {item.DisType === "Diseasename" ? "Diseasename: "+item.text : item.DisType === "Indication" ? "Indication: "+item.text : ""}
-                        </>
-                      }
-                    </td>
+                    <td>  </td>
+                    <td>  </td>
                     <td> {item.MedEntityType === "ADR" ? item.text : ""} </td>
                     <td> {item.MedEntityType === "Note" ? item.text : ""} </td>
                   </tr>
-                ))))
+                )))))
                 )}
-
-              </tbody>
-            </table>
+                </>
+                </tbody>
+              </table>
+            </div>
           }
         </div>
+        {/*
+          {this.state.entities.map((item, index1) => ((checkOnlyOnce(item.text, this.state.entities)===index1) && (item.Context.map((c) => (
+            <tr key={index1+c}>
+              <td>
+              {item.MedEntityType === "Medication" &&
+                <>
+                  {item.MedType === "Drugname" ? "Drugname: "+item.text : item.MedType === "SourceInfodrug" ? "SourceInfodrug: "+item.text : ""}
+                </>
+              }
+              </td>
+              <td>
+                {item.MedEntityType === "Disease" &&
+                  <>
+                    {item.DisType === "Diseasename" ? "Diseasename: "+item.text : item.DisType === "Indication" ? "Indication: "+item.text : ""}
+                  </>
+                }
+              </td>
+              <td> {item.MedEntityType === "ADR" ? item.text : ""} </td>
+              <td> {item.MedEntityType === "Note" ? item.text : ""} </td>
+            </tr>
+          ))))
+          )}
+        */}
       </div>
     );
   }

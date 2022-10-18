@@ -7,7 +7,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: white;
+  background: #a5bbfd;
 }
 
 .flex-container {
@@ -21,6 +21,36 @@
   font-size: calc(10px + 2vmin);
 }
 
+.reviewtext {
+  align-self: center;
+  flex-wrap: nowrap;
+  margin: 0.475rem;
+  flex-grow: 1;
+  font-size: large;
+  max-height: 100vh;
+  min-width: 160vh;
+  max-width: 160vh;
+  background-color: white;
+  color: black;
+  border-radius: 8px;
+  border-color: black;
+
+  border-bottom:  2px #113a65;
+}
+
+.table {
+  align-self: center;
+  flex-wrap: nowrap;
+  min-width: 160vh;
+  max-width: 160vh;
+  background-color: white;
+  color: black;
+  border-radius: 8px;
+  border-color: black;
+
+  border-bottom:  2px #113a65;
+}
+
 .markupColor {
   opacity: 0.4;
 }
@@ -28,7 +58,7 @@
 input[type="text"] {
   background-color: white;
   border: 10;
-  border-radius: 6px;
+  border-radius: 8px;
   border-bottom: solid 2px #113a65;
   width: 60%;
   padding-bottom: 4px;
@@ -59,6 +89,14 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
   background-color: white;
+
+  align-self: center;
+  flex-wrap: nowrap;
+  min-width: 160vh;
+  max-width: 160vh;
+  font-size: large;
+  background-color: white;
+  color: black;
 }
 
 th, td {
