@@ -1,3 +1,20 @@
+## Краткая инструкция для запуска:
+
+1. Установить [node.js](https://nodejs.org/en/download/).
+
+   Проверка: 
+   ### `node -v`;  `npm -v`
+   
+   Установка npx:
+   
+   ### `npm install -g npx`
+   
+2. Клонируем webapp_markup локально на компьютер.
+3. Переходим в директорию проекта и выполняем команду:
+
+   ### `npm start`
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
