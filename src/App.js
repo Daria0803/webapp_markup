@@ -44,6 +44,31 @@ const checkOnlyOnce = (str, list) => {
     }
 }
 
+const prepareInBrackets = (obj, str) => {
+  if (obj.ATC) {
+    return str + ` (${obj.ATC})`;
+  }
+  if (obj.MedDRA) {
+    return str + ` (${obj.MedDRA})`;
+  }
+  if (obj.MKB10) {
+    return str + ` (${obj.MKB10})`;
+  }
+  if (obj.source_group) {
+    return str + ` (${obj.source_group})`;
+  }
+  if (obj.Medfrom_standart) {
+    return str + ` (${obj.Medfrom_standart})`;
+  }
+  if (obj.MedMaker) {
+    return str + ` (${obj.MedMaker})`;
+  }
+  if (obj.MedFrom) {
+    return str + ` (${obj.MedFrom})`;
+  }
+  return str;
+}
+
 class App extends Component {
 
   state = {
@@ -85,16 +110,16 @@ class App extends Component {
             var contextArr = totalObj.Medication[obj.MedType];
             obj.Context.map(context => {
               if (contextArr[context] && !contextArr[context].includes(obj.text)) {
-                contextArr[context] += `, ${obj.text}`;
+                contextArr[context] += prepareInBrackets(obj, `, ${obj.text}`);
               } else {
-                contextArr[context] = `${obj.text}`;
+                contextArr[context] = prepareInBrackets(obj, `${obj.text}`);
               }
             });
           } else {
             totalObj.Medication[obj.MedType] = [];
             var contextArr = totalObj.Medication[obj.MedType];
             obj.Context.map(context => {
-              contextArr[context] = `${obj.text}`;
+              contextArr[context] = prepareInBrackets(obj, `${obj.text}`);
             });
           }
         }
@@ -103,16 +128,16 @@ class App extends Component {
             var contextArr = totalObj.Disease[obj.DisType];
             obj.Context.map(context => {
               if (contextArr[context] && !contextArr[context].includes(obj.text)) {
-                contextArr[context] += `, ${obj.text}`;
+                contextArr[context] += prepareInBrackets(obj, `, ${obj.text}`);
               } else {
-                contextArr[context] = `${obj.text}`;
+                contextArr[context] = prepareInBrackets(obj, `${obj.text}`);
               }
             });
           } else {
             totalObj.Disease[obj.DisType] = [];
             var contextArr = totalObj.Disease[obj.DisType];
             obj.Context.map(context => {
-              contextArr[context] = `${obj.text}`;
+              contextArr[context] = prepareInBrackets(obj, `${obj.text}`);
             });
           }
         }
@@ -230,8 +255,8 @@ class App extends Component {
                   <tr key={index1+c}>
                     <td>  </td>
                     <td>  </td>
-                    <td> {item.MedEntityType === "ADR" ? item.text : ""} </td>
-                    <td> {item.MedEntityType === "Note" ? item.text : ""} </td>
+                    <td> {item.MedEntityType === "ADR" ? prepareInBrackets(item, item.text) : ""} </td>
+                    <td> {item.MedEntityType === "Note" ? prepareInBrackets(item, item.text) : ""} </td>
                   </tr>
                 )))))
                 )}
