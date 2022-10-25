@@ -105,6 +105,32 @@ class App extends Component {
             text = dataArr[1];
           }
         });
+
+        if (obj.MedEntityType === "Medication") {
+          obj.Context.map(context => {
+            if (!totalObj.Medication[context]) {
+              totalObj.Medication[context] = [];
+            }
+            const typePlusEntitie = obj.MedType + ': '  + prepareInBrackets(obj, `${obj.text}`);
+            if (!totalObj.Medication[context].includes(typePlusEntitie)) {
+              totalObj.Medication[context].push(typePlusEntitie);
+            }
+          })
+        }
+
+        if (obj.MedEntityType === "Disease") {
+          obj.Context.map(context => {
+            if (!totalObj.Disease[context]) {
+              totalObj.Disease[context] = [];
+            }
+            const typePlusEntitie = obj.DisType + ': '  + prepareInBrackets(obj, `${obj.text}`);
+            if (!totalObj.Disease[context].includes(typePlusEntitie)) {
+              totalObj.Disease[context].push(typePlusEntitie);
+            }
+          })
+        }
+
+        /*
         if (obj.MedEntityType === "Medication") {
           if (totalObj.Medication[obj.MedType]) {
             var contextArr = totalObj.Medication[obj.MedType];
@@ -123,6 +149,7 @@ class App extends Component {
             });
           }
         }
+
         if (obj.MedEntityType === "Disease") {
           if (totalObj.Disease[obj.DisType]) {
             var contextArr = totalObj.Disease[obj.DisType];
@@ -141,7 +168,7 @@ class App extends Component {
             });
           }
         }
-
+        */
         /*
         obj.Context.map(context => {
           if (obj.MedEntityType === "Medication") {
@@ -153,17 +180,17 @@ class App extends Component {
         */
 
       });
-      console.log(totalObj);
       const result = totalArr.join('');
       const resultSplit = result.split('\n', 5);
-      console.log(resultSplit);
-      console.log(resultSplit[4]);
+      console.log(totalObj)
       //console.log(result2);
       //Object.entries(this.state.tableData).map((key, value) => ( console.log(key)));
       //console.log(typeof totalObj.Medication)
+      /*
       Object.entries(totalObj.Medication).map(([key, value]) => {
         Object.entries(value).map(([k, v]) => console.log(`${key}: ${v}`))
       })
+      */
       this.setState({
         found: true,
         title: resultSplit[2],
@@ -187,6 +214,14 @@ class App extends Component {
     }
   }
 
+  /*                Object.entries(value).map(([k, v]) => (
+                      <tr key={key+k}>
+                        <td></td>
+                        <td>{key}: {v}</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                  ))*/
   render() {
     return(
       <div className="wrapper">
@@ -208,6 +243,7 @@ class App extends Component {
             }
             <p> {this.state.error} </p>
           </div>
+
           { this.state.found &&
             <div >
               <table align="center">
@@ -223,28 +259,32 @@ class App extends Component {
                 <>
                 {
                   Object.entries(this.state.tableData.Medication).map(([key, value]) => (
-                    Object.entries(value).map(([k, v]) => (
-                        <tr>
-                          <td>{key}: {v}</td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                    ))
+                    <tr>
+                      <td>
+                        {Object.entries(value).map(([k,v]) => (
+                              <p>{v}</p>
+                        ))}
+                      </td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
                   ))
                 }
                 </>
                 <>
                 {
                   Object.entries(this.state.tableData.Disease).map(([key, value]) => (
-                    Object.entries(value).map(([k, v]) => (
-                        <tr>
-                          <td></td>
-                          <td>{key}: {v}</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                    ))
+                    <tr>
+                      <td></td>
+                      <td>
+                        {Object.entries(value).map(([k,v]) => (
+                              <p>{v}</p>
+                        ))}
+                      </td>
+                      <td></td>
+                      <td></td>
+                    </tr>
                   ))
 
                 }
@@ -265,6 +305,7 @@ class App extends Component {
               </table>
             </div>
           }
+
         </div>
         {/*
           {this.state.entities.map((item, index1) => ((checkOnlyOnce(item.text, this.state.entities)===index1) && (item.Context.map((c) => (
