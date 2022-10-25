@@ -91,6 +91,7 @@ class App extends Component {
       var text = reviewExample.text;
       var totalArr = [];
       var totalObj = {};
+      var totalobj = {};
       totalObj.Medication = {};
       totalObj.Disease = {};
       console.log(entities)
@@ -105,6 +106,30 @@ class App extends Component {
             text = dataArr[1];
           }
         });
+
+        obj.Context.map(context => {
+          if (!totalobj[context]) {
+            totalobj[context] = []
+          }
+          if (!totalobj[context][obj.MedEntityType]) {
+            totalobj[context][obj.MedEntityType] = []
+          }
+          if (obj.MedEntityType === "Medication") {
+            var typePlusEntitie = obj.MedType + ': '  + prepareInBrackets(obj, `${obj.text}`);
+          }
+          if (obj.MedEntityType === "Disease") {
+            var typePlusEntitie = obj.DisType + ': '  + prepareInBrackets(obj, `${obj.text}`);
+          }
+          if (obj.MedEntityType === "ADR" || obj.MedEntityType === "Note") {
+            var typePlusEntitie = prepareInBrackets(obj, `${obj.text}`);
+          }
+          if (!totalobj[context][obj.MedEntityType].includes(typePlusEntitie)) {
+            totalobj[context][obj.MedEntityType].push(typePlusEntitie);
+          }
+
+        });
+
+
 
         if (obj.MedEntityType === "Medication") {
           obj.Context.map(context => {
@@ -182,7 +207,8 @@ class App extends Component {
       });
       const result = totalArr.join('');
       const resultSplit = result.split('\n', 5);
-      console.log(totalObj)
+      console.log(totalObj);
+      console.log(totalobj);
       //console.log(result2);
       //Object.entries(this.state.tableData).map((key, value) => ( console.log(key)));
       //console.log(typeof totalObj.Medication)
@@ -197,7 +223,7 @@ class App extends Component {
         text: resultSplit[4],
         url: resultSplit[0],
         entities: entities,
-        tableData: totalObj,
+        tableData: totalobj,
         error: undefined
       });
 
@@ -256,6 +282,49 @@ class App extends Component {
                   </tr>
                 </thead>
                 <tbody>
+                {
+                  Object.entries(this.state.tableData).map(([key, value]) => (
+                    <tr>
+                      <td>
+                        {value.Medication ?
+                          Object.entries(value.Medication).map(([k,v]) => (
+                              <p>{v}</p>
+                          ))
+                          :
+                          <></>
+                        }
+                      </td>
+                      <td>
+                        {value.Disease ?
+                          Object.entries(value.Disease).map(([k,v]) => (
+                              <p>{v}</p>
+                          ))
+                          :
+                          <></>
+                        }
+                      </td>
+                      <td>
+                        {value.ADR ?
+                          Object.entries(value.ADR).map(([k,v]) => (
+                              <p>{v}</p>
+                          ))
+                          :
+                          <></>
+                        }
+                      </td>
+                      <td>
+                        {value.Note ?
+                          Object.entries(value.Note).map(([k,v]) => (
+                              <p>{v}</p>
+                          ))
+                          :
+                          <></>
+                        }
+                      </td>
+                    </tr>
+                  ))
+                }
+                {/*
                 <>
                 {
                   Object.entries(this.state.tableData.Medication).map(([key, value]) => (
@@ -301,6 +370,7 @@ class App extends Component {
                 )))))
                 )}
                 </>
+                */}
                 </tbody>
               </table>
             </div>
