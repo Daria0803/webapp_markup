@@ -55,6 +55,25 @@
   opacity: 0.4;
 }
 
+span[data-title] {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  border-bottom: 1px dashed #000;
+}
+
+span[data-title]:hover:before {
+  content: attr(data-title);
+  position: absolute;
+  max-width: 130px;
+  color: #fff;
+  background: #4676D7;
+  padding: 5px;
+  border-radius: 8px;
+  bottom: 25px;
+  left: 50px;
+}
+
 input[type="text"] {
   background-color: white;
   border: 10;

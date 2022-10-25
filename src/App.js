@@ -46,27 +46,27 @@ const checkOnlyOnce = (str, list) => {
 
 const prepareInBrackets = (obj, str) => {
   if (obj.ATC) {
-    return str + ` (${obj.ATC})`;
+    return str.toLowerCase() + ` (${obj.ATC})`;
   }
   if (obj.MedDRA) {
-    return str + ` (${obj.MedDRA})`;
+    return str.toLowerCase() + ` (${obj.MedDRA})`;
   }
   if (obj.MKB10) {
-    return str + ` (${obj.MKB10})`;
+    return str.toLowerCase() + ` (${obj.MKB10})`;
   }
   if (obj.source_group) {
-    return str + ` (${obj.source_group})`;
+    return str.toLowerCase() + ` (${obj.source_group})`;
   }
   if (obj.Medfrom_standart) {
-    return str + ` (${obj.Medfrom_standart})`;
+    return str.toLowerCase() + ` (${obj.Medfrom_standart})`;
   }
   if (obj.MedMaker) {
-    return str + ` (${obj.MedMaker})`;
+    return str.toLowerCase() + ` (${obj.MedMaker})`;
   }
   if (obj.MedFrom) {
-    return str + ` (${obj.MedFrom})`;
+    return str.toLowerCase() + ` (${obj.MedFrom})`;
   }
-  return str;
+  return str.toLowerCase();
 }
 
 class App extends Component {
@@ -102,7 +102,13 @@ class App extends Component {
           const substr = reviewExample.text.substring(span.begin, span.end);
           if (text) {
             const dataArr = splitOnce(text, substr);
-            totalArr.push(dataArr[0] + `<span class="text_${markupColor}">`+substr+'</span>');
+            if (obj.MedEntityType === "Medication") {
+              totalArr.push(dataArr[0] + `<span class="text_${markupColor}" data-title=${obj.MedType}>`+substr+'</span>');
+            } else if (obj.MedEntityType === "Disease") {
+              totalArr.push(dataArr[0] + `<span class="text_${markupColor}" data-title=${obj.DisType}>`+substr+'</span>');
+            } else {
+              totalArr.push(dataArr[0] + `<span class="text_${markupColor}">`+substr+'</span>');
+            }
             text = dataArr[1];
           }
         });
